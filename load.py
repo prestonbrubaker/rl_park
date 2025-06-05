@@ -16,7 +16,7 @@ for k in range(len(labels)):
         q = 0
         for j in range(10):
             q += labels[k][i + j] * 0.9 ** j
-        qt.append(q)
+        qt.append([q])
         gt.append(list(games[k][i]))
     qs.append(qt)
     gs.append(gt)
