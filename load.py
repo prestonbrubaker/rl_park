@@ -9,6 +9,7 @@ qs = []
 gs = []
 
 for k in range(len(labels)):
+    print(k)
     gt = []
     qt = []
     for i in range(50000 - 10):
@@ -20,11 +21,11 @@ for k in range(len(labels)):
     qs.append(qt)
     gs.append(gt)
 
-qs = torch.tensor(qs).float()
-gs = torch.tensor(gs).float()
+    qs_t = torch.tensor(qs).float()
+    gs_t = torch.tensor(gs).float()
 
-torch.save(qs, "qs.pth")
-torch.save(gs, "gs.pth")
+    torch.save(qs_t, "qs.pth")
+    torch.save(gs_t, "gs.pth")
 
 print(qs.shape)
 print(gs.shape)
