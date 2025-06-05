@@ -17,7 +17,13 @@ for k in range(len(labels)):
         for j in range(10):
             q += labels[k][i + j] * 0.9 ** j
         qt.append([q])
-        gt.append(list(games[k][i]))
+        gtt = []
+        for v in range(8):
+            if v <= 3:
+                gtt.append(float(games[k][i][v]))
+            else:
+                gtt.append(float(games[k][i][v]) / 800)
+        gt.append(gtt)
     qs.append(qt)
     gs.append(gt)
 

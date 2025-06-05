@@ -32,7 +32,10 @@ print(labels.shape)
 random_data = torch.rand((8))
 willohnet = WillohNet()
 
-#willohnet.load_state_dict(torch.load('willohnet.pth'))
+willohnet.load_state_dict(torch.load('willohnet.pth'))
+
+device = torch.device('cuda', 0)
+print(f"Using {device} device")
 
 result = willohnet(random_data)
 print(random_data)
@@ -42,22 +45,25 @@ print(result)
 
 def examples(i):
 
-    u = random.randint(0,len(data) - 1)
-    v = random.randint(0, DATA_POINTS - 1)
-    data_sl = data[u][v]
-    label_sl = labels[u][v]
+    if i==0:
+        return
+    for k in range(i):
+        u = random.randint(0,len(data) - 1)
+        v = random.randint(0, DATA_POINTS - 1)
+        data_sl = data[u][v]
+        label_sl = labels[u][v]
 
-    pred = willohnet(data_sl)
+        pred = willohnet(data_sl)
 
-    print(f'Data: {data_sl}\nPrediction: {pred}\nActual: {label_sl}\n\n')
+        print(f'Data: {list(data_sl)}\nPrediction: {float(pred)}\nActual: {float(label_sl)}\n\n')
 
-    time.sleep(1)
+        time.sleep(1)
 
 examples(10)
 
 loss_fn = nn.MSELoss()
 
-optimizer = torch.optim.Adam(willohnet.parameters(), lr=0.0001)
+optimizer = torch.optim.Adam(willohnet.parameters(), lr=0.001)
 
 willohnet.train()
 
