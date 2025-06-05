@@ -8,7 +8,7 @@ print(labels.shape)
 qs = []
 gs = []
 
-for k in range(1):
+for k in range(len(labels)):
     gt = []
     qt = []
     for i in range(50000 - 10):
