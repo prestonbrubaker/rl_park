@@ -12,7 +12,7 @@ for k in range(len(labels)):
     print(k)
     gt = []
     qt = []
-    for i in range(50000 - 10):
+    for i in range(len(games)):
         q = 0
         for j in range(10):
             q += labels[k][i + j] * 0.9 ** j
@@ -33,5 +33,5 @@ for k in range(len(labels)):
     torch.save(qs_t, "qs.pth")
     torch.save(gs_t, "gs.pth")
 
-print(qs.shape)
-print(gs.shape)
+#print(qs.shape)
+#print(gs.shape)

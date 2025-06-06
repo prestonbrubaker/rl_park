@@ -10,12 +10,18 @@ DATA_POINTS = 49990
 class WillohNet(nn.Module):
     def __init__(self):
         super(WillohNet, self).__init__()
-        self.fc1 = nn.Linear(8, 100)
-        self.fc2 = nn.Linear(100, 100)
-        self.fc3 = nn.Linear(100, 100)
-        self.fc4 = nn.Linear(100, 1)
+        self.fc1 = nn.Linear(8, 500)
+        self.fc2 = nn.Linear(500, 500)
+        self.fc3 = nn.Linear(500, 100)
+        self.fc4 = nn.Linear(100, 100)
+        self.fc5 = nn.Linear(100, 100)
+        self.fc6 = nn.Linear(100, 100)
+        self.fc7 = nn.Linear(100, 10)
+        self.fc8 = nn.Linear(10, 1)
+        self.fc9 = nn.Linear(8, 1)
 
     def forward(self, x):
+        y = x
         x = self.fc1(x)
         x = F.relu(x)
         x = self.fc2(x)
@@ -23,6 +29,14 @@ class WillohNet(nn.Module):
         x = self.fc3(x)
         x = F.relu(x)
         x = self.fc4(x)
+        x = F.relu(x)
+        x = self.fc5(x)
+        x = F.relu(x)
+        x = self.fc6(x)
+        x = F.relu(x)
+        x = self.fc7(x)
+        x = F.relu(x)
+        x = self.fc8(x) + self.fc9(y)
         return x
 
 
@@ -54,7 +68,7 @@ def examples(i):
         return
     for k in range(i):
         u = random.randint(0,len(data) - 1)
-        v = random.randint(0, DATA_POINTS - 1)
+        v = random.randint(0, len(data[0]) - 1)
         data_sl = data[u][v]
         label_sl = labels[u][v]
 
@@ -64,7 +78,7 @@ def examples(i):
 
         time.sleep(1)
 
-examples(10)
+examples(0)
 
 loss_fn = nn.MSELoss()
 
@@ -74,20 +88,20 @@ willohnet.train()
 
 
 
-for j in range(10):
-    for i in range(DATA_POINTS):
+for j in range(10000):
+    for i in range(len(data[0])):
 
         k = len(data)
 
-        part = 150
+        part = 80
 
         p = random.randint(0, k - part - 1)
 
         lower_i = random.randint(p,p+part)
 
 
-        data_sl = data[lower_i,lower_i+part]
-        labels_sl = labels[lower_i,lower_i+part]
+        data_sl = data[lower_i:lower_i+part]
+        labels_sl = labels[lower_i:lower_i+part]
 
         pred = willohnet(data_sl)
         loss = loss_fn(pred, labels_sl)
@@ -96,7 +110,7 @@ for j in range(10):
         optimizer.step()
         optimizer.zero_grad()
 
-        if i%10==0:
-            print(loss.item())
+        if i%1==0:
+            print(loss.item() / part)
             torch.save(willohnet.state_dict(), 'willohnet.pth')
     

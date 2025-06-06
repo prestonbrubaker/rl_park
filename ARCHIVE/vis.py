@@ -13,14 +13,19 @@ window = pygame.display.set_mode((800,800))
 class WillohNet(nn.Module):
     def __init__(self):
         super(WillohNet, self).__init__()
-        self.fc1 = nn.Linear(6, 100)
-        self.fc2 = nn.Linear(100, 1)
+        self.fc1 = nn.Linear(8, 100)
+        self.fc2 = nn.Linear(100, 100)
+        self.fc3 = nn.Linear(100, 100)
+        self.fc4 = nn.Linear(100, 1)
 
     def forward(self, x):
         x = self.fc1(x)
         x = F.relu(x)
         x = self.fc2(x)
-        x = F.sigmoid(x)
+        x = F.relu(x)
+        x = self.fc3(x)
+        x = F.relu(x)
+        x = self.fc4(x)
         return x
 
 

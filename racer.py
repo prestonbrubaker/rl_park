@@ -11,7 +11,7 @@ rounds = 10000
 
 running = True
 
-num_steps = 50000
+num_steps = 5000
 
 games = []
 labels = []
@@ -44,13 +44,13 @@ for round in range(rounds):
 
         # This is da sun
         if r == 0 and u<800:
-            u+=1
+            u+=0
         if r == 1 and v<800:
-            v+=1
+            v+=0
         if r == 2 and u>0:
-            u-=1
+            u-=0
         if r == 3 and v>0:
-            v-=1
+            v-=0
 
         # This is da lil guy
         keys = pygame.key.get_pressed()
