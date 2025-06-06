@@ -6,10 +6,7 @@ import pygame
 import time
 
 pygame.init()
-
 window = pygame.display.set_mode((800,800))
-
-DATA_POINTS = 49990
 
 class WillohNet(nn.Module):
     def __init__(self):

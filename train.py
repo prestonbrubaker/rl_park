@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 import random
 import time
 
@@ -25,6 +26,9 @@ class WillohNet(nn.Module):
 
 data = torch.load("gs.pth")
 labels = torch.load("qs.pth")
+
+data = DataLoader(data, batch_size=64, shuffle=True)
+labels = DataLoader(labels, batch_size=64, shuffle=True)
 
 print(data.shape)
 print(labels.shape)
