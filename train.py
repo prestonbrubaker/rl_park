@@ -12,7 +12,8 @@ class WillohNet(nn.Module):
         super(WillohNet, self).__init__()
         self.fc1 = nn.Linear(8, 100)
         self.fc2 = nn.Linear(100, 100)
-        self.fc3 = nn.Linear(100, 1)
+        self.fc3 = nn.Linear(100, 100)
+        self.fc4 = nn.Linear(100, 1)
 
     def forward(self, x):
         x = self.fc1(x)
@@ -20,7 +21,8 @@ class WillohNet(nn.Module):
         x = self.fc2(x)
         x = F.relu(x)
         x = self.fc3(x)
-        x = F.sigmoid(x)
+        x = F.relu(x)
+        x = self.fc4(x)
         return x
 
 
@@ -66,7 +68,7 @@ examples(10)
 
 loss_fn = nn.MSELoss()
 
-optimizer = torch.optim.Adam(willohnet.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(willohnet.parameters(), lr=0.00001)
 
 willohnet.train()
 
@@ -77,13 +79,15 @@ for j in range(10):
 
         k = len(data)
 
-        p = random.randint(0, k - 5 - 1)
+        part = 150
 
-        lower_i = random.randint(p,p+5)
+        p = random.randint(0, k - part - 1)
+
+        lower_i = random.randint(p,p+part)
 
 
-        data_sl = data[lower_i,lower_i+5]
-        labels_sl = labels[lower_i,lower_i+5]
+        data_sl = data[lower_i,lower_i+part]
+        labels_sl = labels[lower_i,lower_i+part]
 
         pred = willohnet(data_sl)
         loss = loss_fn(pred, labels_sl)
@@ -92,7 +96,7 @@ for j in range(10):
         optimizer.step()
         optimizer.zero_grad()
 
-        if i%1==0:
+        if i%10==0:
             print(loss.item())
-        torch.save(willohnet.state_dict(), 'willohnet.pth')
+            torch.save(willohnet.state_dict(), 'willohnet.pth')
     
