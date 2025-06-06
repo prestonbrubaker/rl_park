@@ -27,11 +27,10 @@ class WillohNet(nn.Module):
 data = torch.load("gs.pth")
 labels = torch.load("qs.pth")
 
-data = DataLoader(data, batch_size=64, shuffle=True)
-labels = DataLoader(labels, batch_size=64, shuffle=True)
-
 print(data.shape)
 print(labels.shape)
+
+
 
 random_data = torch.rand((8))
 willohnet = WillohNet()
@@ -75,6 +74,7 @@ willohnet.train()
 
 for j in range(10):
     for i in range(DATA_POINTS):
+
         pred = willohnet(data)
         loss = loss_fn(pred, labels)
 
@@ -82,7 +82,7 @@ for j in range(10):
         optimizer.step()
         optimizer.zero_grad()
 
-        if i%10==0:
+        if i%1==0:
             print(loss.item())
         torch.save(willohnet.state_dict(), 'willohnet.pth')
     
