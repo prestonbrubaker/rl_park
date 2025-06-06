@@ -75,8 +75,18 @@ willohnet.train()
 for j in range(10):
     for i in range(DATA_POINTS):
 
-        pred = willohnet(data)
-        loss = loss_fn(pred, labels)
+        k = len(data)
+
+        p = random.randint(0, k - 5 - 1)
+
+        lower_i = random.randint(p,p+5)
+
+
+        data_sl = data[lower_i,lower_i+5]
+        labels_sl = labels[lower_i,lower_i+5]
+
+        pred = willohnet(data_sl)
+        loss = loss_fn(pred, labels_sl)
 
         loss.backward()
         optimizer.step()
