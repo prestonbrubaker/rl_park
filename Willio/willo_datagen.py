@@ -118,7 +118,7 @@ criterion = nn.MSELoss()  # Regression loss for Q-values
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-num_epochs = 10
+num_epochs = 1000
 model.train()
 for epoch in range(num_epochs):
     running_loss = 0.0
@@ -138,5 +138,5 @@ for epoch in range(num_epochs):
             print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}], Loss: {running_loss/10:.4f}')
             running_loss = 0.0
 
-print("Training finished!")
-torch.save(model.state_dict(), 'game_cnn.pth')
+            print("Training finished!")
+            torch.save(model.state_dict(), 'game_cnn.pth')
