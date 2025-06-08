@@ -4,7 +4,7 @@ import random
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 400
+WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 WHITE = (255, 255, 255)
@@ -19,7 +19,6 @@ gravity = 1
 score = 0
 game_over = False
 ground_height = 50
-world_width = 2000
 camera_x = 0
 
 player_size = 40
@@ -29,11 +28,26 @@ jump_strength = -15
 player_speed = 7
 on_ground = False
 
-platforms = [
-    {"x": 300, "y": 250, "width": 200, "height": 20},
-    {"x": 700, "y": 200, "width": 150, "height": 20},
-    {"x": 1000, "y": 300, "width": 250, "height": 20},
-]
+platforms = []
+furthest_x = WIDTH
+
+def generate_platforms(max_x):
+    """Generate new platforms starting from max_x."""
+    global furthest_x
+    while furthest_x < max_x + WIDTH * 2:
+        platform_width = random.randint(100, 300)
+        platform_height = 20
+        platform_x = furthest_x + random.randint(100, 250)
+        platform_y = random.randint(HEIGHT - ground_height - 200, HEIGHT - ground_height - 50)
+
+        platforms.append({
+            "x": platform_x,
+            "y": platform_y,
+            "width":platform_width,
+            "height":platform_height
+        })
+        furthest_x = platform_x + platform_width
+
 
 def handle_camera():
     """Adjust the camera position based on lil guy"""
@@ -71,6 +85,8 @@ def check_on_ground_or_platform():
     
     return lowest_y
 
+generate_platforms(0)
+
 while not game_over:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,11 +97,10 @@ while not game_over:
         player_pos[0] -= player_speed
     if keys[pygame.K_RIGHT]:
         player_pos[0] += player_speed
-    if keys[pygame.K_SPACE] and on_ground:  # Jump
+    if keys[pygame.K_SPACE] and on_ground:
         player_velocity_y = jump_strength
         on_ground = False
 
-    # Apply gravity
     player_velocity_y += gravity
     player_pos[1] += player_velocity_y
 
@@ -97,22 +112,24 @@ while not game_over:
     else:
         on_ground = False
 
-    # Handle camera movement
     handle_camera()
 
-    # Clear screen
+    if camera_x + WIDTH > furthest_x - WIDTH:
+        generate_platforms(camera_x)
+
+    platforms = [p for p in platforms if p["x"] + p["width"] > camera_x - WIDTH]
+
     screen.fill(GREY)
 
-    pygame.draw.rect(screen, LIGHT_GREY, (0 - camera_x, HEIGHT - ground_height, world_width, ground_height))
+    pygame.draw.rect(screen, LIGHT_GREY, (0 - camera_x, HEIGHT - ground_height, camera_x + WIDTH, ground_height))
     for platform in platforms:
         pygame.draw.rect(screen, WHITE, (platform["x"] - camera_x, platform["y"], platform["width"], platform["height"]))
     pygame.draw.rect(screen, PINK, (player_pos[0], player_pos[1], player_size, player_size))
 
-    # Refresh display
     pygame.display.flip()
 
-    # Frame rate
     clock.tick(30)
 
 pygame.quit()
+
 
