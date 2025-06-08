@@ -14,6 +14,7 @@ RED = (255, 0, 0)
 PINK = (248, 24, 148)
 
 clock = pygame.time.Clock()
+font = pygame.font.SysFont("roboto", 24)
 
 gravity = 1
 score = 0
@@ -44,7 +45,8 @@ def generate_platforms(max_x):
             "x": platform_x,
             "y": platform_y,
             "width":platform_width,
-            "height":platform_height
+            "height":platform_height,
+            "visited": False
         })
         furthest_x = platform_x + platform_width
 
@@ -79,11 +81,20 @@ def check_on_ground_or_platform():
         if detect_collision(player_rect, platform_rect):
             if lowest_y is None or platform["y"] < lowest_y:
                 lowest_y = platform["y"]
+                if not platform["visited"]:
+                    platform["visited"] = True
+                    update_score(5)
     
     if lowest_y is None and player_pos[1] + player_size >= HEIGHT - ground_height:
         return HEIGHT - ground_height
     
     return lowest_y
+
+def update_score(points):
+    """Updates player score based on game conditions"""
+    global score
+    score += points
+
 
 generate_platforms(0)
 
@@ -125,6 +136,9 @@ while not game_over:
     for platform in platforms:
         pygame.draw.rect(screen, WHITE, (platform["x"] - camera_x, platform["y"], platform["width"], platform["height"]))
     pygame.draw.rect(screen, PINK, (player_pos[0], player_pos[1], player_size, player_size))
+
+    score_text = font.render(f'Score: {score}', True, WHITE)
+    screen.blit(score_text, (10, 10))
 
     pygame.display.flip()
 
