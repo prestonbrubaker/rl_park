@@ -66,6 +66,8 @@ transform = transforms.Compose([
 # Temperature for softmax
 temperature = 1.0  # Higher values increase randomness, lower values make it more deterministic
 
+itC = 0
+
 # Game loop
 running = True
 while running:
@@ -139,16 +141,21 @@ while running:
         plat_x += 0.001
         pygame.draw.rect(window, color, (i * 800 / check_c - plat_x % (800 / check_c), 800 - plat_y, 800 / check_c, plat_y))
     pygame.draw.rect(window, (255, 0, 0), (x - 25, 800 - y - 50, 50, 50))
-    text = font.render(f"Score: {score:.2f}", True, (0, 255, 0))
-    text_rect = text.get_rect(center=(100, 20))
+    text = font.render(f"Score: {score:.2f}   Iterations: {itC}", True, (0, 255, 0))
+    text_rect = text.get_rect(center=(120, 20))
+    window.blit(text, text_rect)
+    text = font.render(f"Logits (wasd): {list(logits)}", True, (0, 255, 0))
+    text_rect = text.get_rect(center=(300, 40))
     window.blit(text, text_rect)
     pygame.display.flip()
 
-    time.sleep(0.01)
+    time.sleep(0.1)
 
-# Save dataset if enabled
-if collect_data:
-    with open('ai_game_dataset.pkl', 'wb') as f:
-        pickle.dump(dataset, f)
+    # Save dataset if enabled
+    if collect_data and itC % 10000 == 0:
+        with open('ai_game_dataset.pkl', 'wb') as f:
+            pickle.dump(dataset, f)
+    
+    itC += 1
 
 pygame.quit()

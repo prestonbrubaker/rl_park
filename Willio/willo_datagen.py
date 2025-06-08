@@ -134,7 +134,7 @@ for epoch in range(num_epochs):
         
         running_loss += loss.item()
         
-        if i % 10 == 9:
+        if i % 10 == 0:
             print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}], Loss: {running_loss/10:.4f}')
             running_loss = 0.0
 
